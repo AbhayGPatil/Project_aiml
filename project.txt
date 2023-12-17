@@ -1,0 +1,35 @@
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import os
+
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+
+# assuming that 'diabetes.csv' is the file name
+filepath = os.path.join('/kaggle/input', 'diabetes.csv')
+
+if os.path.exists(filepath):
+    df = pd.read_csv(filepath)
+    df.head(10)
+    df.info()
+    df.describe()
+    df.isnull().sum()
+
+    # Creating subplots for histograms
+    fig, axes = plt.subplots(2, 4, figsize=(15, 8))
+    factors_df = df.drop(["Outcome"], axis=1)
+    plt.tight_layout()
+    for j, i in enumerate(factors_df.columns.tolist()):
+        x = j % 4
+        y = j // 4
+        sns.histplot(ax=axes[y, x], x=factors_df[i])
+
+    plt.show()
+
+    # Adding a Pie Chart
+    plt.figure(figsize=(8, 8))
+    plt.pie(df['Outcome'].value_counts(), labels=['No Diabetes', 'Diabetes'], autopct='%1.1f%%', startangle=90,
+            colors=['skyblue', 'lightcoral'])
+    plt.title('Distribution of Diabetes Outcome')
+    plt.show()
